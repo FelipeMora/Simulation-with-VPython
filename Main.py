@@ -1,10 +1,10 @@
 from pymongo import MongoClient
 import Use_VPython as uv
-import Sending_Data as sd
+import data_transformation as dt
 
 def ant_main(msg):
     print(msg)
-    print("=")*800
+    print("=")*2000
     main()
 
 class main:
@@ -13,8 +13,9 @@ class main:
         uv.simulation()
         #sd.crud_mongo('localhost',27017,"Posicuerpos")
 
-    def sent_dat(self,h,r,t):
-        print("Debe enviar la informacion")
+    @classmethod
+    def sent_dat(cls,i,h,r,t,v,c,o,x,z):#Altura, radio, tiempo de caida
+        dt.dat(i,r,x,h,z,t,v,o,c)
 
 if __name__ == '__main__':
     msg = "Iniciando proceso"
