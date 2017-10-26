@@ -1,11 +1,15 @@
 from visual import *
 from math import *
 from pymongo import MongoClient
+import Main as m
 tcol = 0
+
 
 class simulation:
 
+
     def __init__(self):
+        self.jvez = 0
         self.r = 0.5
         self.h = 10
         self.ball = sphere(pos=vector(0,self.h,0), radius=self.r, color=color.cyan, make_trail=True) #Definicion de la esfera
@@ -20,19 +24,26 @@ class simulation:
 
         self.varr = arrow(pos=self.ball.pos, axis=self.vscale*self.ball.velocity, color=color.yellow)
         self.vpos = self.ball.velocity.x#Guardando atributo de vector
-        self.tiempo()
+
         self.run_simulation()
 
     def planoTangente(self):
         self.wallT = box(pos=vector(0,self.ball.pos.y-self.r,0), size=vector(12,0.2,12), color=color.blue)
         #Plano tangente a la esfera en el eje y
 
+    def vel_impac(self):
+        #v = raiz(2*g*h)
+        self.v = math.sqrt(2*self.g*self.h)
+
     def tiempo(self):
         #2h/a=t^2
-        pball = self.ball.pos.y
+        pball = self.h
         tllegada = 2*float(pball)/self.g
         tllegada = math.sqrt(math.fabs(tllegada))
+        self.vel_impac()
         print("--------------------->>> P.Y = " + str(pball) + " TARDARA >>>>>>>>>> " + str(tllegada))
+        self.jvez = self.jvez+1
+        m.main.sent_dat(str(self.jvez),str(pball),str(self.r),str(tllegada),self.v,"body_data","ball",str(self.ball.pos.x),str(self.ball.pos.z))
 
     def colision(self):
         if self.ball.pos.y-self.r > self.wallB.pos.y:
@@ -47,17 +58,17 @@ class simulation:
                 else:
                     tcol = 0
         if self.ball.pos.y-self.r < self.wallB.pos.y:
-            print("Colision")
+            self.tiempo()
+            #print("Colision")
             #Yn = Yn-1/2
             global tcol
             tcol=1
             self.h = self.h-2#La altura maxima a a la que llegara
-            print("La altura maxima =========" + str(self.h))
+            #print("La altura maxima =========" + str(self.h))
             self.ballmove()
 
     def ballmove(self):
         self.ball.pos = self.ball.pos + self.ball.velocity*self.deltat
-        #print("avanzo >>>> " + str(self.ball.pos))
 
     def checkpos(self):
         #y=Yo+Vo*t+1/2*g*t**2
@@ -68,7 +79,6 @@ class simulation:
     def run_simulation(self):
         while self.h > 0:
             rate(100)#Indica que no se ejecutara el ciclo mas de 100 veces por segundo
-            #tiempo()
             self.colision()
             self.varr.pos = self.ball.pos
             self.t = self.t + self.deltat
