@@ -26,15 +26,16 @@ class dat:
         dat_general = self.body_data_general()
         print(dat_general)#Deben se enviados a sending_data
         #Leer la bd
-        #sd.crud_mongo('localhost',27017,"Posicuerpos",dat_general,"body_data","r")
-        sd.crud_mongo('localhost',27017,"Posicuerpos",dat_general,self.collection_set,"c")
+        #En lina
+        #sd.crud_mongo('ds157444.mlab.com',57444,"Simulation","1234567","posicuerpos",dat_general,self.collection_set,"c")
         switcher = {
             "ball" : self.dictionary_body_data_ball,
             "wall" : self.dictionary_body_data_wall
         }
         clas_obj = switcher.get(argument)
         dat_specific = clas_obj()#problema logico
-        sd.crud_mongo('localhost',27017,"Posicuerpos",dat_specific,self.collection_set,"c")
+        #En linea
+        sd.crud_mongo('ds157444.mlab.com',57444,"Simulation","1234567","posicuerpos",dat_specific,self.collection_set,"c")
         print(dat_specific)
 
     def body_data_general(self):
@@ -64,15 +65,6 @@ class dat:
 
     def dictionary_proc_info(self):
         print("aun no hago nada :C")
-
-    def to_DB_Collection(self):
-        return {
-            "position_x":self.nombre,
-            "position_y":self.apellidos,
-            "position_z": self.edad,
-            "down_time":self.demarcacion,
-            "impact_speed":self.internacional
-        }
 
     def __str__(self):
         return "PosX : %x - PosY : %y - PosZ : %z - TiempoCaida : %c - VelImpacto : %v" \
