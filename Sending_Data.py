@@ -5,10 +5,12 @@ from pymongo import MongoClient
 class crud_mongo:
     #Host = localhost
     #Puerto = 27017
-    #Nombre BD : Posicuerpos
+    #Nombre BD : Posicuerpos #user,pas
     def __init__(self,host,puerto,bd,dictionary,collection_set,operation):
         print(">>>>>>>>>>")*20
         self.__dictionary = dictionary
+        #En linea
+        #bd_uri = 'mongodb://{}:{}@ds235775.mlab.com:35775/posicuerpos'.format(user,pas)
         self.__mongoClient = MongoClient()
         self.db = self.__mongoClient.bd
         self.classi_operation(operation)
@@ -22,6 +24,7 @@ class crud_mongo:
         self.go = switcher.get(arg)
     #@classmethod
     def create(self,collection):#Toca clasificar la collection a la que va
+        print("<<<<<<<<<<<<<<<<<<<< CREATE >>>>>>>>>>>>>>>>>")*20
         switcher = {
             "body_data" : self.create_body_data,
             "processed_info" : self.create_proc_info,
@@ -29,10 +32,9 @@ class crud_mongo:
             "wall" : self.create_body_data_wall
         }
         site = switcher.get(collection)
-        print("-<>-<> | " + str(site))*30
         collection_cla = site()
         collection_cla.insert(self.__dictionary)
-        print("///////// LO HE CREADO >>>>>>>>>>>>>>>>")*30
+        print("<<<<<<<<<<<<<<< COLECCION INGRESADA >>>>>>>>>>>>>>>>>>")*20
         self.closeSession()
 
     def create_body_data(self):
@@ -44,7 +46,6 @@ class crud_mongo:
         return collection
 
     def create_body_data_ball(self):
-        print("------------> EN BALL <---------------")
         collection = self.db.ball
         return collection
 
