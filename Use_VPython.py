@@ -9,7 +9,8 @@ class simulation:
 
 
     def __init__(self):
-        self.jvez = 0
+        self.arr_info = []
+        self.jvez = -1
         self.r = 0.5
         self.h = 10
         self.ball = sphere(pos=vector(0,self.h,0), radius=self.r, color=color.cyan, make_trail=True) #Definicion de la esfera
@@ -43,7 +44,18 @@ class simulation:
         self.vel_impac()
         print("--------------------->>> P.Y = " + str(pball) + " TARDARA >>>>>>>>>> " + str(tllegada))
         self.jvez = self.jvez+1
-        m.main.sent_dat(str(self.jvez),str(pball),str(self.r),str(tllegada),self.v,"body_data","ball",str(self.ball.pos.x),str(self.ball.pos.z))
+        dat_to_arr = str(self.jvez) + "," + str(pball) + "," + str(self.r) + "," + str(tllegada) + "," + str(self.v) + ", body_data , ball ," + str(self.ball.pos.x) + "," + str(self.ball.pos.z)
+        self.set_arr(dat_to_arr)
+
+    def set_arr(self,dat):
+        dat_split = dat.split(',')
+        print(dat_split)
+        for i in range(len(dat_split)/2):
+            len_dat = len(self.arr_info)/2
+            self.arr_info.insert(2*len_dat,dat_split[2*i])
+            self.arr_info.insert(2*len_dat+1,dat_split[2*i+1])
+        #m.main.sent_dat(str(self.jvez),str(pball),str(self.r),str(tllegada),self.v,"body_data","ball",str(self.ball.pos.x),str(self.ball.pos.z))
+        #vez, altura, radio, t_llegada, v_impact, nombre_obj, spec_obj, pos_x, pos_z)
 
     def colision(self):
         if self.ball.pos.y-self.r > self.wallB.pos.y:
@@ -82,3 +94,4 @@ class simulation:
             self.colision()
             self.varr.pos = self.ball.pos
             self.t = self.t + self.deltat
+        print(self.arr_info)
