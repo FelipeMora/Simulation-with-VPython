@@ -1,8 +1,9 @@
 #Crear una lista de objetos
 import Sending_Data as sd
+
 class dat:
 
-    def __init__(self,identifier,radio_ball,pos_x,pos_y,pos_z,t_caida,v_impac,identifier_obj,collection_set):
+    def __init__(self,identifier,radio_ball,pos_x,pos_y,pos_z,t_caida,v_impac,identifier_obj,collection_set):#
         self.identifier = identifier
         self.radio_ball = radio_ball
         self.pos_x = pos_x#float
@@ -11,8 +12,11 @@ class dat:
         self.t_caida = t_caida#float
         self.v_impac = v_impac#boolean
         self.ident_obj = identifier_obj
-        self.goes = self.collection_to_BD(collection_set)
-        self.goes(identifier_obj)
+        #---------------
+        self.grupo_body_general()
+        #---------------
+        #self.goes = self.collection_to_BD(collection_set)
+        #self.goes(identifier_obj)
 
     def collection_to_BD(self,argument):
         switcher = {
@@ -23,10 +27,12 @@ class dat:
         return go
 
     def dictionary_body_data(self,argument):
+        #Debe llamar a la creacion del grupo
         dat_general = self.body_data_general()
         print(dat_general)#Deben se enviados a sending_data
         #Leer la bd
         #En lina
+        sd.crud_mongo(dat_general,self.collection_set,"c")
         #sd.crud_mongo('ds157444.mlab.com',57444,"Simulation","1234567","posicuerpos",dat_general,self.collection_set,"c")
         switcher = {
             "ball" : self.dictionary_body_data_ball,
@@ -35,7 +41,7 @@ class dat:
         clas_obj = switcher.get(argument)
         dat_specific = clas_obj()#problema logico
         #En linea
-        sd.crud_mongo('ds157444.mlab.com',57444,"Simulation","1234567","posicuerpos",dat_specific,self.collection_set,"c")
+        sd.crud_mongo(dat_specific,self.collection_set,"c")
         print(dat_specific)
 
     def body_data_general(self):
@@ -45,6 +51,17 @@ class dat:
             "position_x":self.pos_x,
             "position_y":self.pos_y,
             "position_z":self.pos_z
+        }
+
+    def grupo_body_general(self):
+        self.collection_set = "grupo_general"
+        sd.crud_mongo("NADA",self.collection_set,"r")
+        #    sd.crud_mongo(dat_group,self.collection_set,"c")
+
+    def dictionary_group_general(self,fecha,i):
+        return {
+            "fecha": fecha,
+            "grupo": i,
         }
 
     def dictionary_body_data_ball(self):
